@@ -1,0 +1,83 @@
+table,stage,check,status,rows_in,rows_out,detail
+products,extract,file_read,PASS,0,40,"40 rows, 13 cols from products.csv"
+suppliers,extract,file_read,PASS,0,10,"10 rows, 11 cols from suppliers.csv"
+sales,extract,file_read,PASS,0,21289,"21,289 rows, 10 cols from sales.csv"
+inventory,extract,file_read,PASS,0,14640,"14,640 rows, 9 cols from inventory.csv"
+forecasts,extract,file_read,PASS,0,3680,"3,680 rows, 14 cols from forecasts.csv"
+risk_scores,extract,file_read,PASS,0,120,"120 rows, 16 cols from risk_scores.csv"
+products,validate,required_cols,PASS,40,40,All required columns present
+products,validate,pk_unique,PASS,40,40,0 duplicate PKs in 'product_id'
+products,validate,not_null:product_id,PASS,40,0,0 nulls (0.0%)
+products,validate,not_null:sku,PASS,40,0,0 nulls (0.0%)
+products,validate,not_null:category,PASS,40,0,0 nulls (0.0%)
+products,validate,not_null:unit_cost,PASS,40,0,0 nulls (0.0%)
+products,validate,not_null:unit_price,PASS,40,0,0 nulls (0.0%)
+products,validate,non_neg:unit_cost,PASS,40,0,0 negative values
+products,validate,non_neg:unit_price,PASS,40,0,0 negative values
+products,validate,non_neg:lead_time_days,PASS,40,0,0 negative values
+products,validate,non_neg:reorder_point,PASS,40,0,0 negative values
+products,validate,non_neg:reorder_quantity,PASS,40,0,0 negative values
+products,validate,row_count,PASS,40,40,40 rows
+suppliers,validate,required_cols,PASS,10,10,All required columns present
+suppliers,validate,pk_unique,PASS,10,10,0 duplicate PKs in 'supplier_id'
+suppliers,validate,not_null:supplier_id,PASS,10,0,0 nulls (0.0%)
+suppliers,validate,not_null:supplier_name,PASS,10,0,0 nulls (0.0%)
+suppliers,validate,not_null:country,PASS,10,0,0 nulls (0.0%)
+suppliers,validate,range:reliability_score,PASS,10,0,"0 values outside [0,10]"
+suppliers,validate,non_neg:payment_terms_days,PASS,10,0,0 negative values
+suppliers,validate,row_count,PASS,10,10,10 rows
+sales,validate,required_cols,PASS,21289,21289,All required columns present
+sales,validate,pk_unique,PASS,21289,21289,0 duplicate PKs in 'sale_id'
+sales,validate,not_null:sale_id,PASS,21289,0,0 nulls (0.0%)
+sales,validate,not_null:product_id,PASS,21289,0,0 nulls (0.0%)
+sales,validate,not_null:sale_date,PASS,21289,0,0 nulls (0.0%)
+sales,validate,not_null:quantity_sold,PASS,21289,0,0 nulls (0.0%)
+sales,validate,range:discount_pct,PASS,21289,0,"0 values outside [0,100]"
+sales,validate,non_neg:quantity_sold,PASS,21289,0,0 negative values
+sales,validate,non_neg:unit_price,PASS,21289,0,0 negative values
+sales,validate,non_neg:discount_pct,PASS,21289,0,0 negative values
+sales,validate,fk:product_id,PASS,21289,0,0 orphaned FK values
+sales,validate,row_count,PASS,21289,21289,"21,289 rows"
+inventory,validate,required_cols,PASS,14640,14640,All required columns present
+inventory,validate,pk_unique,PASS,14640,14640,0 duplicate PKs in 'inventory_id'
+inventory,validate,not_null:inventory_id,PASS,14640,0,0 nulls (0.0%)
+inventory,validate,not_null:product_id,PASS,14640,0,0 nulls (0.0%)
+inventory,validate,not_null:snapshot_date,PASS,14640,0,0 nulls (0.0%)
+inventory,validate,not_null:warehouse_id,PASS,14640,0,0 nulls (0.0%)
+inventory,validate,non_neg:quantity_on_hand,PASS,14640,0,0 negative values
+inventory,validate,non_neg:quantity_reserved,PASS,14640,0,0 negative values
+inventory,validate,fk:product_id,PASS,14640,0,0 orphaned FK values
+inventory,validate,row_count,PASS,14640,14640,"14,640 rows"
+forecasts,validate,required_cols,PASS,3680,3680,All required columns present
+forecasts,validate,pk_unique,PASS,3680,3680,0 duplicate PKs in 'forecast_id'
+forecasts,validate,not_null:forecast_id,PASS,3680,0,0 nulls (0.0%)
+forecasts,validate,not_null:product_id,PASS,3680,0,0 nulls (0.0%)
+forecasts,validate,not_null:forecast_date,PASS,3680,0,0 nulls (0.0%)
+forecasts,validate,not_null:predicted_demand,PASS,3680,0,0 nulls (0.0%)
+forecasts,validate,non_neg:predicted_demand,PASS,3680,0,0 negative values
+forecasts,validate,fk:product_id,PASS,3680,0,0 orphaned FK values
+forecasts,validate,row_count,PASS,3680,3680,"3,680 rows"
+risk_scores,validate,required_cols,PASS,120,120,All required columns present
+risk_scores,validate,pk_unique,PASS,120,120,0 duplicate PKs in 'risk_id'
+risk_scores,validate,not_null:risk_id,PASS,120,0,0 nulls (0.0%)
+risk_scores,validate,not_null:supplier_id,PASS,120,0,0 nulls (0.0%)
+risk_scores,validate,not_null:delay_probability,PASS,120,0,0 nulls (0.0%)
+risk_scores,validate,not_null:risk_tier,PASS,120,0,0 nulls (0.0%)
+risk_scores,validate,range:delay_probability,PASS,120,0,"0 values outside [0,1]"
+risk_scores,validate,range:composite_risk_score,PASS,120,0,"0 values outside [0,100]"
+risk_scores,validate,fk:supplier_id,PASS,120,0,0 orphaned FK values
+risk_scores,validate,row_count,PASS,120,120,120 rows
+products,clean,complete,PASS,40,40,Dropped 0 duplicates; nulls imputed with category medians
+suppliers,clean,complete,PASS,10,10,Dropped 0 duplicates
+sales,clean,complete,PASS,21289,21289,Removed 0 invalid/duplicate rows; qty+price capped at 3xIQR
+inventory,clean,complete,PASS,14640,14640,Removed 0 rows; reserved clamped to on_hand
+forecasts,clean,complete,PASS,3680,3680,Removed 0 rows; prediction bounds sanitised
+risk_scores,clean,complete,PASS,120,120,Removed 0 rows; tiers validated
+sales,transform,derived_cols,PASS,21289,21289,"Added: revenue, net_quantity, year, month, week, dow"
+inventory,transform,derived_cols,PASS,14640,14640,"Added: quantity_available, is_below_reorder"
+products,load,csv_write,PASS,40,40,→ products.csv  (4.2 KB)
+suppliers,load,csv_write,PASS,10,10,→ suppliers.csv  (1.2 KB)
+sales,load,csv_write,PASS,21289,21289,→ sales.csv  (1761.8 KB)
+inventory,load,csv_write,PASS,14640,14640,→ inventory.csv  (1031.4 KB)
+forecasts,load,csv_write,PASS,3680,3680,→ forecasts.csv  (344.1 KB)
+risk_scores,load,csv_write,PASS,120,120,→ risk_scores.csv  (32.0 KB)

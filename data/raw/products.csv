@@ -1,0 +1,41 @@
+product_id,sku,product_name,category,sub_category,unit_cost,unit_price,lead_time_days,reorder_point,reorder_quantity,is_active,created_at,updated_at
+1,SKU-0001,Smartphones Product 01,Electronics,Smartphones,630.47,867.24,11,71,142,True,2023-01-01,2024-01-01
+2,SKU-0002,T-Shirts Product 02,Apparel,T-Shirts,18.55,64.16,34,118,472,True,2023-01-01,2024-01-01
+3,SKU-0003,Snacks Product 03,Food & Beverage,Snacks,23.8,33.07,8,280,840,True,2023-01-01,2024-01-01
+4,SKU-0004,Furniture Product 04,Home & Garden,Furniture,278.76,587.7,15,41,164,True,2023-01-01,2024-01-01
+5,SKU-0005,Laptops Product 05,Electronics,Laptops,382.56,493.84,6,53,212,True,2023-01-01,2024-01-01
+6,SKU-0006,Jeans Product 06,Apparel,Jeans,100.69,289.37,12,49,196,True,2023-01-01,2024-01-01
+7,SKU-0007,Beverages Product 07,Food & Beverage,Beverages,11.28,22.33,5,457,1828,True,2023-01-01,2024-01-01
+8,SKU-0008,Lighting Product 08,Home & Garden,Lighting,66.45,127.14,24,47,94,True,2023-01-01,2024-01-01
+9,SKU-0009,Accessories Product 09,Electronics,Accessories,165.72,244.14,19,64,192,True,2023-01-01,2024-01-01
+10,SKU-0010,Jackets Product 10,Apparel,Jackets,44.49,108.1,43,39,117,True,2023-01-01,2024-01-01
+11,SKU-0011,Canned Goods Product 11,Food & Beverage,Canned Goods,6.49,9.03,7,290,580,True,2023-01-01,2024-01-01
+12,SKU-0012,Cleaning Product 12,Home & Garden,Cleaning,204.25,384.17,12,25,100,True,2023-01-01,2024-01-01
+13,SKU-0013,Audio Product 13,Electronics,Audio,575.2,762.11,17,69,207,True,2023-01-01,2024-01-01
+14,SKU-0014,Footwear Product 14,Apparel,Footwear,51.4,117.71,38,58,232,True,2023-01-01,2024-01-01
+15,SKU-0015,Dairy Product 15,Food & Beverage,Dairy,5.05,7.27,8,102,408,True,2023-01-01,2024-01-01
+16,SKU-0016,Tools Product 16,Home & Garden,Tools,202.81,441.25,25,33,132,True,2023-01-01,2024-01-01
+17,SKU-0017,Wearables Product 17,Electronics,Wearables,394.19,562.7,5,28,56,True,2023-01-01,2024-01-01
+18,SKU-0018,Accessories Product 18,Apparel,Accessories,82.86,215.51,14,132,396,True,2023-01-01,2024-01-01
+19,SKU-0019,Confectionery Product 19,Food & Beverage,Confectionery,23.18,40.43,6,321,642,True,2023-01-01,2024-01-01
+20,SKU-0020,Decor Product 20,Home & Garden,Decor,98.15,140.74,19,37,111,True,2023-01-01,2024-01-01
+21,SKU-0021,Smartphones Product 21,Electronics,Smartphones,210.94,287.6,20,71,142,True,2023-01-01,2024-01-01
+22,SKU-0022,T-Shirts Product 22,Apparel,T-Shirts,14.53,33.1,18,140,280,True,2023-01-01,2024-01-01
+23,SKU-0023,Snacks Product 23,Food & Beverage,Snacks,20.2,34.14,6,413,1652,True,2023-01-01,2024-01-01
+24,SKU-0024,Furniture Product 24,Home & Garden,Furniture,127.85,293.47,22,35,70,True,2023-01-01,2024-01-01
+25,SKU-0025,Laptops Product 25,Electronics,Laptops,67.03,82.85,17,63,252,True,2023-01-01,2024-01-01
+26,SKU-0026,Jeans Product 26,Apparel,Jeans,26.06,69.11,26,142,284,True,2023-01-01,2024-01-01
+27,SKU-0027,Beverages Product 27,Food & Beverage,Beverages,21.19,34.16,3,252,504,True,2023-01-01,2024-01-01
+28,SKU-0028,Lighting Product 28,Home & Garden,Lighting,192.78,346.62,13,77,154,True,2023-01-01,2024-01-01
+29,SKU-0029,Accessories Product 29,Electronics,Accessories,138.5,219.49,10,74,222,True,2023-01-01,2024-01-01
+30,SKU-0030,Jackets Product 30,Apparel,Jackets,37.78,130.25,34,61,244,True,2023-01-01,2024-01-01
+31,SKU-0031,Canned Goods Product 31,Food & Beverage,Canned Goods,21.79,35.18,7,208,416,True,2023-01-01,2024-01-01
+32,SKU-0032,Cleaning Product 32,Home & Garden,Cleaning,271.75,516.69,9,60,120,True,2023-01-01,2024-01-01
+33,SKU-0033,Audio Product 33,Electronics,Audio,279.47,400.11,13,30,90,True,2023-01-01,2024-01-01
+34,SKU-0034,Footwear Product 34,Apparel,Footwear,92.95,281.0,39,109,327,True,2023-01-01,2024-01-01
+35,SKU-0035,Dairy Product 35,Food & Beverage,Dairy,19.19,32.79,2,359,1077,True,2023-01-01,2024-01-01
+36,SKU-0036,Tools Product 36,Home & Garden,Tools,130.58,188.79,8,26,78,True,2023-01-01,2024-01-01
+37,SKU-0037,Wearables Product 37,Electronics,Wearables,297.4,374.07,15,26,52,True,2023-01-01,2024-01-01
+38,SKU-0038,Accessories Product 38,Apparel,Accessories,27.11,91.43,30,148,444,True,2023-01-01,2024-01-01
+39,SKU-0039,Confectionery Product 39,Food & Beverage,Confectionery,11.06,18.95,4,109,218,False,2023-01-01,2024-01-01
+40,SKU-0040,Decor Product 40,Home & Garden,Decor,149.87,338.86,29,19,38,False,2023-01-01,2024-01-01

@@ -1,0 +1,11 @@
+supplier_id,supplier_name,contact_email,country,region,reliability_score,payment_terms_days,is_active,onboarded_at,created_at,updated_at
+1,AlphaSource Global,orders@alphasourceg.com,China,Asia,9.2,30,True,2022-06-01,2022-06-01,2024-01-01
+2,BetaTrade Partners,orders@betatradepar.com,India,Asia,7.8,45,True,2022-06-01,2022-06-01,2024-01-01
+3,Gamma Logistics Ltd,orders@gammalogisti.com,USA,Americas,8.5,15,True,2022-06-01,2022-06-01,2024-01-01
+4,Delta Supply Co,orders@deltasupplyc.com,Germany,Europe,9.5,30,True,2022-06-01,2022-06-01,2024-01-01
+5,Epsilon Vendors,orders@epsilonvendo.com,Vietnam,Asia,6.5,60,True,2022-06-01,2022-06-01,2024-01-01
+6,Zeta Manufacturing,orders@zetamanufact.com,Bangladesh,Asia,5.8,90,True,2022-06-01,2022-06-01,2024-01-01
+7,Eta Components Inc,orders@etacomponent.com,Mexico,Americas,8.0,30,True,2022-06-01,2022-06-01,2024-01-01
+8,Theta Global Trade,orders@thetaglobalt.com,UK,Europe,9.0,30,True,2022-06-01,2022-06-01,2024-01-01
+9,Iota Fast Supply,orders@iotafastsupp.com,South Korea,Asia,8.8,15,True,2022-06-01,2022-06-01,2024-01-01
+10,Kappa Budget Source,orders@kappabudgets.com,Indonesia,Asia,4.5,90,True,2022-06-01,2022-06-01,2024-01-01
