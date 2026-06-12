@@ -1,0 +1,48 @@
+{
+  "model_regression": "supplier_risk_regression_v1",
+  "model_classifier": "supplier_risk_classifier_v1",
+  "metrics_regression": {
+    "test_mae": 0.04222940062694113,
+    "test_rmse": 0.05382917193318593,
+    "test_mape": 16.385107547720832
+  },
+  "metrics_classifier": {
+    "test_f1_macro": 1.0,
+    "test_f1_weighted": 1.0
+  },
+  "params_regression": {
+    "learning_rate": 0.05,
+    "max_depth": 3,
+    "n_estimators": 200,
+    "subsample": 1.0
+  },
+  "params_classifier": {
+    "learning_rate": 0.05,
+    "max_depth": 3,
+    "n_estimators": 100
+  },
+  "features": [
+    "hist_mean_delay_days",
+    "hist_delay_variance",
+    "hist_on_time_rate",
+    "orders_evaluated",
+    "rolling_delay_mean_3m",
+    "rolling_delay_std_3m",
+    "rolling_on_time_rate_3m",
+    "rolling_delay_prob_3m",
+    "delay_trend_3m",
+    "delay_spike_flag",
+    "lag_1m_delay_mean",
+    "lag_1m_delay_prob",
+    "lag_2m_delay_mean",
+    "reliability_score",
+    "payment_terms_days",
+    "country_risk_tier",
+    "years_active",
+    "reliability_x_ontime",
+    "delay_var_x_mean",
+    "region_Americas",
+    "region_Asia",
+    "region_Europe"
+  ]
+}
