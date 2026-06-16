@@ -50,3 +50,36 @@ venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
+**Step 2: Prepare the data**
+```bash
+
+python generate_mock_data.py
+python etl_pipeline.py
+python feature_engineering.py
+
+**Step 4: Launch the application**
+```bash
+
+# Set up the MLflow tracker (Mac/Linux)
+export MLFLOW_TRACKING_URI="sqlite:///mlflow.db"
+# Set up the MLflow tracker (Windows PowerShell)
+$env:MLFLOW_TRACKING_URI="sqlite:///mlflow.db"
+
+# Train the models
+python mlflow_tracking.py
+
+**Step 3: Track and train the models**
+```bash
+
+# Open Terminal 1 and start the API server
+uvicorn main:app --reload --port 8000
+
+# Open Terminal 2 and start the dashboard
+streamlit run dashboard.py
+
+
+## 🔐 5. Security & Scaling
+
+**Secure API:** The backend is protected by a required API key (X-API-Key: dev-local-key-12345), keeping your data safe.
+
+**AI Copilot:** The natural-language chat feature is safely separated from the rest of the app and securely translates text into database queries. It is built so you can easily connect it to real AI services (like OpenAI or Claude) in the future.
