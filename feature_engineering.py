@@ -202,7 +202,7 @@ def build_demand_features(
             daily.groupby("product_id")["daily_demand"]
                  .shift(lag)
         )
-
+    
     # ── 4. Rolling statistics ─────────────────────────────────
     grp = daily.groupby("product_id")["daily_demand"]
     for window in [7, 14, 30]:

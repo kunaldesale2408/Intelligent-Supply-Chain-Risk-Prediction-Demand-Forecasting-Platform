@@ -1,0 +1,38 @@
+{
+  "run_id": "20260616_114744_327350",
+  "run_name": "gbm_demand_v1",
+  "experiment": "demand_forecasting",
+  "status": "FINISHED",
+  "duration_s": 47.2,
+  "params": {
+    "features": 43,
+    "n_samples": 14640,
+    "target": "daily_demand",
+    "algorithm": "GradientBoostingRegressor",
+    "n_estimators": 200,
+    "max_depth": 5,
+    "learning_rate": 0.08,
+    "subsample": 0.8,
+    "min_samples_leaf": 10,
+    "random_state": 42
+  },
+  "metrics": {
+    "cv_mae_mean": 0.599958,
+    "cv_mae_std": 0.076764,
+    "cv_rmse_mean": 1.118297,
+    "cv_mape_mean": 13.566093,
+    "test_mae": 0.639538,
+    "test_rmse": 1.046142,
+    "test_mape": 15.21709,
+    "test_r2": 0.99006
+  },
+  "tags": {},
+  "artifacts": [
+    "models\\plots\\demand_feature_importance.png",
+    "models\\plots\\demand_permutation_importance.png",
+    "models\\plots\\demand_shap_waterfall.png",
+    "models\\plots\\demand_actual_vs_predicted.png",
+    "mlruns\\demand_forecasting\\20260616_114744_327350\\demand_forecaster.pkl"
+  ],
+  "timestamp": "2026-06-16T11:48:31.525328"
+}

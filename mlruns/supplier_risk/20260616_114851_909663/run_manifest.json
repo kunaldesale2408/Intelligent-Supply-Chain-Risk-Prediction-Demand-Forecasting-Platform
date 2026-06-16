@@ -1,0 +1,44 @@
+{
+  "run_id": "20260616_114851_909663",
+  "run_name": "gbm_supplier_risk_v1",
+  "experiment": "supplier_risk",
+  "status": "FINISHED",
+  "duration_s": 9.29,
+  "params": {
+    "features": 22,
+    "n_samples": 120,
+    "n_suppliers": 10,
+    "algorithm": "GradientBoosting (reg + clf)",
+    "reg_n_estimators": 150,
+    "reg_max_depth": 4,
+    "reg_learning_rate": 0.1,
+    "reg_subsample": 0.85,
+    "reg_min_samples_leaf": 2,
+    "reg_random_state": 42
+  },
+  "metrics": {
+    "loso_mae_mean": 0.051068,
+    "loso_mae_std": 0.026394,
+    "loso_n_folds": 10.0,
+    "test_mae_reg": 0.037338,
+    "test_rmse_reg": 0.049884,
+    "test_r2_reg": 0.97476,
+    "clf_loso_roc_auc_mean": NaN,
+    "clf_loso_roc_auc_std": NaN,
+    "clf_loso_n_folds": 2.0,
+    "test_macro_f1_clf": 1.0,
+    "test_roc_auc_clf": NaN
+  },
+  "tags": {},
+  "artifacts": [
+    "models\\plots\\risk_feature_importance.png",
+    "models\\plots\\risk_permutation_importance.png",
+    "models\\plots\\risk_shap_waterfall_reg.png",
+    "models\\plots\\risk_shap_waterfall_clf.png",
+    "models\\plots\\risk_delay_scatter.png",
+    "models\\plots\\risk_tier_confusion_matrix.png",
+    "mlruns\\supplier_risk\\20260616_114851_909663\\supplier_risk_regressor.pkl",
+    "mlruns\\supplier_risk\\20260616_114851_909663\\supplier_risk_classifier.pkl"
+  ],
+  "timestamp": "2026-06-16T11:49:01.204539"
+}
