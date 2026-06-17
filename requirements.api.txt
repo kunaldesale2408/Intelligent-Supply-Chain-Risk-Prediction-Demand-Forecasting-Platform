@@ -1,0 +1,26 @@
+# ─────────────────────────────────────────────────────────
+# Supply Chain Platform — FastAPI Backend Requirements
+# Tested on Python 3.12 · Section 5-B
+# ─────────────────────────────────────────────────────────
+
+# ── Web framework ─────────────────────────────────────────
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+pydantic>=2.9,<3
+
+# ── ML & data ─────────────────────────────────────────────
+scikit-learn>=1.5,<2
+numpy>=1.26,<3
+pandas>=2.2,<4
+matplotlib>=3.9,<4      # used by models.py for plot artifacts
+scipy>=1.13,<2
+
+# ── MLOps ─────────────────────────────────────────────────
+mlflow>=2.17,<3
+
+# ── Database (optional — ETL / direct load path) ──────────
+sqlalchemy>=2.0,<3
+psycopg2-binary>=2.9,<3
+
+# ── Utilities ─────────────────────────────────────────────
+python-dotenv>=1.0

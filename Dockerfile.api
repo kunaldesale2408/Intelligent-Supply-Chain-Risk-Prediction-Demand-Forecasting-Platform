@@ -1,0 +1,92 @@
+# =============================================================
+# Supply Chain Platform — FastAPI Backend
+# Dockerfile  |  Section 5-B
+# =============================================================
+# Build:  docker build -f Dockerfile.api -t supplychain-api .
+# Run:    docker run -p 8000:8000 --env-file .env supplychain-api
+# =============================================================
+
+# ── Stage 1: dependency builder ───────────────────────────
+FROM python:3.12-slim AS builder
+
+# System build deps (psycopg2-binary bundles libpq, so no libpq-dev needed)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        gcc \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+
+# Copy and install Python deps into an isolated prefix
+# (lets the final stage COPY only the installed packages, not the compiler)
+COPY requirements.api.txt .
+RUN pip install --upgrade pip --quiet \
+ && pip install --quiet --no-cache-dir \
+        --prefix=/install \
+        -r requirements.api.txt
+
+
+# ── Stage 2: lean runtime image ───────────────────────────
+FROM python:3.12-slim AS runtime
+
+# Runtime system deps (curl for HEALTHCHECK, no build tools)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy installed packages from builder
+COPY --from=builder /install /usr/local
+
+# Non-root user — principle of least privilege
+RUN groupadd --gid 1001 appgroup \
+ && useradd  --uid 1001 --gid appgroup --shell /bin/bash --create-home appuser
+
+WORKDIR /app
+
+# Copy application source
+# Ordered from least- to most-frequently-changed for optimal layer caching
+COPY requirements.api.txt  .
+COPY models.py             .
+COPY etl_pipeline.py       .
+COPY feature_engineering.py .
+COPY generate_mock_data.py .
+COPY mlflow_tracking.py    .
+COPY main.py               .
+
+# Data directories (models/ and data/ are mounted as volumes at runtime;
+# creating them here ensures the paths exist if volumes aren't mounted)
+RUN mkdir -p data/raw data/clean data/features data/audit \
+             models/plots mlruns \
+ && chown -R appuser:appgroup /app
+
+USER appuser
+
+# Environment defaults (override via docker-compose environment / .env)
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/app \
+    # API keys (comma-separated list; override in production)
+    SUPPLYCHAIN_API_KEYS="dev-local-key-12345,demo-key-supplychain" \
+    # MLflow tracking server URL
+    MLFLOW_TRACKING_URI="http://mlflow:5000" \
+    # Gunicorn / uvicorn
+    APP_HOST="0.0.0.0" \
+    APP_PORT="8000" \
+    APP_WORKERS="2"
+
+EXPOSE 8000
+
+# Health check — hits /health every 30 s; 3 failures → unhealthy
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f -s http://localhost:8000/health | grep -q '"status":"ok"' || exit 1
+
+# Use uvicorn directly for simplicity.
+# For higher throughput swap to:
+#   gunicorn main:app --workers $APP_WORKERS \
+#       --worker-class uvicorn.workers.UvicornWorker \
+#       --bind $APP_HOST:$APP_PORT
+CMD ["python", "-m", "uvicorn", "main:app", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--workers", "2", \
+     "--log-level", "info"]

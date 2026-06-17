@@ -1,0 +1,206 @@
+# =============================================================
+# Supply Chain Risk Prediction & Demand Forecasting Platform
+# docker-compose.yml  |  Section 5-B
+# =============================================================
+#
+# Services
+# ────────
+#   postgres   PostgreSQL 16 — schema auto-initialised from schema.sql
+#   api        FastAPI backend (models + prediction endpoints)
+#   streamlit  Streamlit dashboard
+#   mlflow     MLflow tracking server (experiment UI + model registry)
+#
+# Quick start
+# ───────────
+#   cp .env.example .env          # fill in secrets
+#   docker compose up --build     # first run (builds images)
+#   docker compose up -d          # subsequent runs (detached)
+#
+# Useful URLs (after startup)
+# ───────────────────────────
+#   Dashboard  → http://localhost:8501
+#   API docs   → http://localhost:8000/docs
+#   MLflow UI  → http://localhost:5000
+#   API health → http://localhost:8000/health
+#
+# Stop & remove containers (keeps volumes):
+#   docker compose down
+#
+# Full reset (DELETES postgres data & mlflow artifacts):
+#   docker compose down -v
+# =============================================================
+
+services:
+
+  # ── PostgreSQL ─────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: supplychain_postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB:       ${POSTGRES_DB:-supplychain_db}
+      POSTGRES_USER:     ${POSTGRES_USER:-scadmin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme_in_production}
+
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+
+    volumes:
+      # Persist data across container restarts
+      - postgres_data:/var/lib/postgresql/data
+      # Auto-run schema.sql on first initialisation
+      # (only runs when the data volume is empty / new)
+      - ./database:/docker-entrypoint-initdb.d:ro
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-scadmin} -d ${POSTGRES_DB:-supplychain_db}"]
+      interval: 10s
+      timeout:  5s
+      retries:  5
+      start_period: 20s
+
+    networks:
+      - supplychain-net
+
+
+  # ── MLflow Tracking Server ─────────────────────────────────
+  mlflow:
+    image: python:3.12-slim
+    container_name: supplychain_mlflow
+    restart: unless-stopped
+
+    # Install mlflow then start the server in one command.
+    # Using a pre-built mlflow image (e.g. ghcr.io/mlflow/mlflow) is faster
+    # in production — this approach keeps the compose self-contained.
+    command: >
+      bash -c "pip install mlflow psycopg2-binary --quiet --no-cache-dir &&
+               mlflow server
+                 --backend-store-uri postgresql://${POSTGRES_USER:-scadmin}:${POSTGRES_PASSWORD:-changeme_in_production}@postgres:5432/${POSTGRES_DB:-supplychain_db}
+                 --artifacts-destination /mlartifacts
+                 --host 0.0.0.0
+                 --port 5000"
+
+    ports:
+      - "${MLFLOW_PORT:-5000}:5000"
+
+    volumes:
+      - mlflow_artifacts:/mlartifacts
+
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:5000/health')\""]
+      interval: 30s
+      timeout:  10s
+      retries:  5
+      start_period: 60s
+
+    networks:
+      - supplychain-net
+
+
+  # ── FastAPI Backend ─────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: supplychain-api:latest
+    container_name: supplychain_api
+    restart: unless-stopped
+
+    ports:
+      - "${API_PORT:-8000}:8000"
+
+    environment:
+      # API security
+      SUPPLYCHAIN_API_KEYS: ${SUPPLYCHAIN_API_KEYS:-dev-local-key-12345,demo-key-supplychain}
+
+      # MLflow (models are also loaded from ./models/*.pkl via volume)
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+
+      # Database (used by ETL / optional direct-load path)
+      DATABASE_URL: postgresql://${POSTGRES_USER:-scadmin}:${POSTGRES_PASSWORD:-changeme_in_production}@postgres:5432/${POSTGRES_DB:-supplychain_db}
+
+      PYTHONUNBUFFERED: "1"
+
+    volumes:
+      # Trained model pickles (written by `python models.py`)
+      - ./models:/app/models:ro
+      # Feature CSVs (written by `python feature_engineering.py`)
+      - ./data:/app/data:ro
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mlflow:
+        condition: service_started   # don't block API on slow MLflow startup
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f -s http://localhost:8000/health | grep -q 'ok\\|degraded'"]
+      interval: 30s
+      timeout:  10s
+      retries:  5
+      start_period: 60s
+
+    networks:
+      - supplychain-net
+
+
+  # ── Streamlit Dashboard ────────────────────────────────────
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    image: supplychain-streamlit:latest
+    container_name: supplychain_streamlit
+    restart: unless-stopped
+
+    ports:
+      - "${STREAMLIT_PORT:-8501}:8501"
+
+    environment:
+      # Resolved via Docker internal DNS (service name = hostname)
+      API_BASE_URL: http://api:8000
+      API_KEY:      ${SUPPLYCHAIN_API_KEYS:-dev-local-key-12345}
+      DATA_DIR:     /app/data/clean
+
+      PYTHONUNBUFFERED: "1"
+
+    volumes:
+      # Same data mount as API so offline mode works without the API running
+      - ./data:/app/data:ro
+
+    depends_on:
+      api:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout:  10s
+      retries:  5
+      start_period: 30s
+
+    networks:
+      - supplychain-net
+
+
+# ── Named volumes ──────────────────────────────────────────────
+volumes:
+  postgres_data:
+    driver: local
+  mlflow_artifacts:
+    driver: local
+
+
+# ── Bridge network ────────────────────────────────────────────
+networks:
+  supplychain-net:
+    driver: bridge
+    name: supplychain-net

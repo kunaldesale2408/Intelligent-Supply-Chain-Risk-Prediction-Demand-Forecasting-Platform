@@ -1,0 +1,73 @@
+# =============================================================
+# Supply Chain Platform — Streamlit Dashboard
+# Dockerfile  |  Section 5-B
+# =============================================================
+# Build:  docker build -f Dockerfile.streamlit -t supplychain-dashboard .
+# Run:    docker run -p 8501:8501 --env-file .env supplychain-dashboard
+# =============================================================
+
+FROM python:3.12-slim
+
+# Runtime deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Non-root user
+RUN groupadd --gid 1001 appgroup \
+ && useradd  --uid 1001 --gid appgroup --shell /bin/bash --create-home appuser
+
+WORKDIR /app
+
+# Install Python deps (no build stage needed — all wheels available)
+COPY requirements.streamlit.txt .
+RUN pip install --upgrade pip --quiet \
+ && pip install --quiet --no-cache-dir -r requirements.streamlit.txt
+
+# Copy dashboard source
+COPY dashboard.py .
+
+# Streamlit config — suppress the "email" prompt and set server options
+# so Streamlit runs cleanly inside Docker without interactive prompts.
+RUN mkdir -p /home/appuser/.streamlit
+COPY --chown=appuser:appgroup <<'EOF' /home/appuser/.streamlit/config.toml
+[global]
+developmentMode = false
+
+[server]
+headless = true
+enableCORS = false
+enableXsrfProtection = true
+port = 8501
+address = "0.0.0.0"
+# Disable file watcher — not needed in Docker; saves resources
+fileWatcherType = "none"
+
+[browser]
+# Prevents Streamlit from opening a browser tab on start
+gatherUsageStats = false
+
+[logger]
+level = "info"
+EOF
+
+RUN chown -R appuser:appgroup /app
+USER appuser
+
+# Environment defaults (override via docker-compose environment / .env)
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    # FastAPI backend URL — resolved via Docker internal DNS
+    API_BASE_URL="http://api:8000" \
+    API_KEY="dev-local-key-12345" \
+    # Path to clean CSVs inside the container (bind-mounted volume)
+    DATA_DIR="/app/data/clean"
+
+EXPOSE 8501
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8501/_stcore/health || exit 1
+
+CMD ["python", "-m", "streamlit", "run", "dashboard.py", \
+     "--server.port=8501", \
+     "--server.address=0.0.0.0"]
