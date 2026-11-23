@@ -52,7 +52,6 @@ from fastapi import Depends, FastAPI, HTTPException, Request, Security, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security.api_key import APIKeyHeader
 from pydantic import BaseModel, Field, field_validator
-from pytz import timezone
 
 import models as ml   # Section 3 — train_*, predict_*, load_model, EX
 
