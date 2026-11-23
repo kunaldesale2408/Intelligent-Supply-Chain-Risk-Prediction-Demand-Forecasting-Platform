@@ -842,8 +842,7 @@ def tab_supplier_risk(risk_scores, suppliers, use_api, sel_sid,
         </tr>
         """
 
-    st.markdown(
-        f"""<table style="width:100%;border-collapse:collapse;font-size:13px">
+    table_html = f"""<table style="width:100%;border-collapse:collapse;font-size:13px">
         <thead><tr style="background:#f8f9fa;border-bottom:2px solid #e9ecef">
           <th style="padding:10px 12px;text-align:left">Supplier</th>
           <th style="padding:10px 12px;text-align:left">Country</th>
@@ -854,9 +853,11 @@ def tab_supplier_risk(risk_scores, suppliers, use_api, sel_sid,
           <th style="padding:10px 12px;text-align:left">Recommendation</th>
         </tr></thead>
         <tbody>{rows_html}</tbody>
-        </table>""",
-        unsafe_allow_html=True,
-    )
+        </table>"""
+    # Markdown renders indented lines after a blank line as a code block,
+    # which showed this table as raw HTML; strip the indentation first.
+    table_html = "\n".join(line.strip() for line in table_html.splitlines() if line.strip())
+    st.markdown(table_html, unsafe_allow_html=True)
 
     st.markdown("&nbsp;")
 
